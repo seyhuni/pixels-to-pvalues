@@ -1,0 +1,83 @@
+# =============================================================================
+# FRPV-PH / MLST project - base configuration
+# All relative paths are resolved against the repository root (MLST_New/).
+# Experiment files in configs/exp/*.yaml override these values;
+# command-line "key=value" overrides are applied last.
+# =============================================================================
+exp_name: debug
+
+paths:
+  data_root: data/FRPV-PH          # folder that contains raw_images/, roi_masks/, expert_1/, expert_2/
+  cache_dir: cache                 # memory-mapped .npy cache + metadata (created by 01_prepare_data.py)
+  results_dir: results             # every experiment writes to results/<exp_name>/
+  official_splits: data/splits_5fold_official.csv
+  hf_cache: null                   # optional: HuggingFace cache dir for foundation-model weights
+
+data:
+  split: official                  # official (animal-level 5-fold) | lopo (leave-one-project-out)
+  folds: [0, 1, 2, 3, 4]           # folds to run (lopo has 4 folds: AH, M, RA, RE)
+  crop_size: 640                   # training crop at native resolution (0.252 um/px)
+  scale_jitter: [0.85, 1.15]
+  roi_center_prob: 0.9             # prob. that a crop is centred on an ROI pixel
+  samples_per_epoch: 2000
+  inner_val_frac: 0.15             # fraction of TRAINING animals held out for monitoring
+  sample_weighting: image          # image | animal (animal = each animal equally likely)
+
+stain:
+  vectors_file: cache/stain_vectors.json   # estimated by 01_prepare_data.py (3-dye NMF)
+  augment: beer_lambert            # beer_lambert | hsv | none
+  aug_conc_scale: 0.20             # multiplicative jitter of each dye concentration (+/-)
+  aug_conc_shift: 0.04             # additive OD jitter per dye
+  aug_vector_deg: 4.0              # random rotation of each dye OD-vector (degrees)
+  branch_input: conc               # what the high-resolution detail branch sees: conc | rgb | rgb+conc | none
+  learnable: true                  # learn a residual on the 3x3 stain matrix (regularised)
+  matrix_reg: 1.0e-2
+
+model:
+  encoder: cnn:convnext_small.fb_in22k   # cnn:<timm name> | fm:<registry key> (see src/frpv/models/encoders.py)
+  pretrained: true
+  native_mpp: 0.252
+  fm_input_mpp: 0.5                # FM sees the crop resampled to this resolution (FMs are trained at ~20x)
+  fm_layers: null                  # null = 4 evenly spaced blocks
+  finetune: lora                   # lora | full | frozen | last_k
+  last_k: 4
+  lora_rank: 16
+  lora_alpha: 32
+  lora_dropout: 0.0
+  grad_checkpointing: true
+  decoder_dim: 256
+  detail_channels: [32, 64, 96, 128]   # detail branch widths at strides 1,2,4,8
+  head: nested                     # nested (p_wall * p_fib|wall) | flat (3-class softmax)
+  label_mode: offset               # e1 | e2 | mean_soft | dual_loss | cm_pixel | offset
+  n_raters: 2
+
+loss:
+  ce_weight: 1.0
+  dice_weight: 1.0
+  dice_fib_weight: 2.0             # fibrosis Dice is up-weighted (thin, patchy class)
+  offset_l2: 1.0e-3                # L2 on rater logit-offsets (identifiability + shrinkage)
+  offset_tv: 1.0e-4                # total-variation smoothness on offsets
+  cm_trace: 1.0e-2                 # trace regulariser for cm_pixel (Zhang et al. 2020)
+
+train:
+  epochs: 40
+  batch_size: 4
+  lr: 3.0e-4                       # decoder/heads
+  lr_encoder: 1.0e-4               # encoder (LoRA adapters or full CNN fine-tuning)
+  weight_decay: 1.0e-4
+  warmup_epochs: 2
+  amp: bf16                        # bf16 | fp16 | none
+  grad_clip: 1.0
+  num_workers: 8
+  seed: 0
+  val_every: 10                    # inner-validation inference every N epochs (monitoring only)
+  select: last                     # last | best (checkpoint used for test-fold inference)
+  compile: false                   # torch.compile (keep false on Windows)
+  deterministic: false
+
+infer:
+  window: 640
+  overlap: 0.5
+  tta: true                        # 4 flips; per-variant FI is used for the TTA-spread
+  save_probmaps: false             # uint8 npz per image (needed for figures / CRC); ~3 MB/image
+  batch_size: 2

@@ -1,0 +1,13 @@
+# Proposed method (A+B): nested head + centred rater logit-offsets + Beer-Lambert stain
+# augmentation + learnable 3-dye deconvolution feeding the high-resolution detail branch.
+# The encoder is chosen in the plan (or on the command line: model.encoder=fm:uni2h).
+exp_name: main
+model:
+  encoder: fm:uni2h
+  finetune: lora
+  head: nested
+  label_mode: offset
+stain:
+  augment: beer_lambert
+  branch_input: conc
+  learnable: true

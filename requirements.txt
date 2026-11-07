@@ -1,0 +1,20 @@
+# For an EXISTING conda env: first install a CUDA build of torch/torchvision, e.g.
+#   pip install torch==2.7.1 torchvision==0.22.1 --index-url https://download.pytorch.org/whl/cu128
+# then: pip install -r requirements.txt
+timm>=1.0.30
+huggingface_hub>=0.30
+safetensors
+transformers>=4.46
+numpy>=1.26,<2.3
+scipy>=1.11
+pandas>=2.1
+scikit-learn>=1.4
+scikit-image>=0.22
+opencv-python-headless>=4.9
+pillow>=10
+pyyaml>=6
+tqdm
+statsmodels>=0.14
+matplotlib>=3.8
+seaborn>=0.13
+tabulate

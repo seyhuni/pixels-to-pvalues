@@ -1,0 +1,4 @@
+# Optional: external baselines (install AFTER the main environment, inside the same env)
+#   pip install -r requirements-baselines.txt
+monai>=1.4
+nnunetv2>=2.5

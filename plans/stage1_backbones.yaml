@@ -1,0 +1,11 @@
+# Stage 1 - backbone comparison with the full proposed method (official animal-level 5-fold CV).
+# Gated models (uni2h, virchow2, hoptimus1) need HF licence acceptance + `huggingface-cli login`.
+# Remove lines for models you cannot access. Expected: ~0.5-1.5 h per fold for ViT-L/H on a 24-32 GB GPU.
+base: configs/base.yaml
+common: []
+runs:
+  - {name: s1_convnext, exp: configs/exp/main.yaml, set: [model.encoder=cnn:convnext_small.fb_in22k]}
+  - {name: s1_dinov2l,  exp: configs/exp/main.yaml, set: [model.encoder=fm:dinov2_l]}
+  - {name: s1_uni2h,    exp: configs/exp/main.yaml, set: [model.encoder=fm:uni2h]}
+  - {name: s1_virchow2, exp: configs/exp/main.yaml, set: [model.encoder=fm:virchow2]}
+  #- {name: s1_hoptimus1, exp: configs/exp/main.yaml, set: [model.encoder=fm:hoptimus1]}

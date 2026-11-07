@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below, and cite the FRPV-PH dataset paper."
+title: "From pixels to p-values: rater-aware, hierarchy-consistent and stain-physics-informed segmentation with distribution-free guarantees for histological fibrosis endpoints"
+authors:
+  - family-names: "Yanık"
+    given-names: "Hüseyin"
+    affiliation: "Department of Information Systems and Technologies, Mersin University, Mersin, Türkiye"
+    orcid: "https://orcid.org/0000-0002-4386-5536"
+    email: "huseyinyanik@mersin.edu.tr"
+license: MIT
+repository-code: "https://github.com/seyhuni/pixels-to-pvalues"
+date-released: "2026-11-07"
+references:
+  - type: article
+    title: "Microscopy Image Dataset of pulmonary vessels for Quantitative assessment of fibrosis"
+    authors:
+      - family-names: "Karpov"
+        given-names: "Andrei A."
+      - name: "et al."
+    journal: "Scientific Data"
+    year: 2026
+    doi: "10.1038/s41597-026-08214-y"

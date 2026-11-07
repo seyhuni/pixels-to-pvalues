@@ -1,0 +1,25 @@
+# Stage 2 - ablations on the best backbone from stage 1. Pass it with:
+#   python scripts/run_plan.py plans/stage2_ablation.yaml --set model.encoder=fm:uni2h
+base: configs/base.yaml
+tag_encoder: true            # run names get the backbone tag, e.g. a2_dual_uni2h
+common: []
+runs:
+  # Tier-1 (16 GB GPU) - '#' lines are optional Tier-2 ablations; remove '#' to run them later.
+  # --- label models (rater handling)
+  # - {name: a2_e1,        exp: configs/exp/main.yaml, set: [model.label_mode=e1]}
+  # - {name: a2_e2,        exp: configs/exp/main.yaml, set: [model.label_mode=e2]}
+  - {name: a2_meansoft,  exp: configs/exp/main.yaml, set: [model.label_mode=mean_soft]}
+  - {name: a2_dual,      exp: configs/exp/main.yaml, set: [model.label_mode=dual_loss]}
+  - {name: a2_cmpixel,   exp: configs/exp/main.yaml, set: [model.label_mode=cm_pixel]}
+  # --- hierarchy
+  # - {name: a2_flat,      exp: configs/exp/main.yaml, set: [model.head=flat]}
+  - {name: a2_multilabel, exp: configs/exp/main.yaml, set: [model.head=multilabel]}
+  # --- stain physics (B)
+  - {name: a2_stain_none,   exp: configs/exp/main.yaml, set: [stain.augment=none, stain.branch_input=rgb]}
+  # - {name: a2_stain_hsv,    exp: configs/exp/main.yaml, set: [stain.augment=hsv, stain.branch_input=rgb]}
+  # - {name: a2_stain_blaug,  exp: configs/exp/main.yaml, set: [stain.branch_input=rgb]}
+  # - {name: a2_stain_rgbconc, exp: configs/exp/main.yaml, set: [stain.branch_input=rgb+conc]}
+  # - {name: a2_stain_fixedM, exp: configs/exp/main.yaml, set: [stain.learnable=false]}
+  - {name: a2_nodetail,     exp: configs/exp/main.yaml, set: [stain.branch_input=none]}
+  # --- FM input resolution (only meaningful for fm:* encoders)
+  # - {name: a2_mpp_native,   exp: configs/exp/main.yaml, set: [model.fm_input_mpp=0.252, train.batch_size=4]}

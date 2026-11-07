@@ -1,0 +1,35 @@
+# --- data and derived files (not redistributed; see README > Data)
+data/FRPV-PH/
+data/*.csv
+cache/
+nnunet_data/
+nnUNet_raw/
+nnUNet_preprocessed/
+nnUNet_results/
+
+# --- experiment outputs, checkpoints, logs
+results/
+results_for_paper.zip
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+*.npz
+*.log
+
+# --- manuscript and local working files (kept private)
+manuscript/
+*.docx
+MLST_New_patch*.zip
+MLST_New/
+
+# --- Python / editors / OS
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.pytest_cache/
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini

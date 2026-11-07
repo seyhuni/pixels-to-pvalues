@@ -1,0 +1,9 @@
+# Stage 4 - extra seeds of the final model for a deep ensemble (epistemic spread for conformal scales).
+#   python scripts/run_plan.py plans/stage4_seeds.yaml --set model.encoder=fm:uni2h
+#   python scripts/03_ensemble.py --runs s1_uni2h e4_seed1_uni2h e4_seed2_uni2h --name final_ens_uni2h
+base: configs/base.yaml
+tag_encoder: true            # run names get the backbone tag, e.g. a2_dual_uni2h
+common: []
+runs:
+  - {name: e4_seed1, exp: configs/exp/main.yaml, set: [train.seed=1]}
+  - {name: e4_seed2, exp: configs/exp/main.yaml, set: [train.seed=2]}

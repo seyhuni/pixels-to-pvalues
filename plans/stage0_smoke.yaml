@@ -1,0 +1,6 @@
+# ~5-15 min on GPU: checks the full pipeline before the long runs.
+base: configs/base.yaml
+common: ["data.folds=[0]", train.epochs=2, data.samples_per_epoch=200, train.val_every=1]
+runs:
+  - {name: s0_cnn_smoke, exp: configs/exp/main.yaml, set: [model.encoder=cnn:convnext_small.fb_in22k]}
+  - {name: s0_fm_smoke,  exp: configs/exp/main.yaml, set: [model.encoder=fm:dinov2_l]}

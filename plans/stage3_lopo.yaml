@@ -1,0 +1,11 @@
+# Stage 3 - leave-one-project-out (staining batch + rater-behaviour shift).
+#   python scripts/run_plan.py plans/stage3_lopo.yaml --set model.encoder=fm:uni2h
+base: configs/base.yaml
+tag_encoder: true            # run names get the backbone tag, e.g. a2_dual_uni2h
+common: [data.split=lopo, "data.folds=[0,1,2,3]"]
+runs:
+  # Tier-1 (16 GB GPU) - '#' lines are optional Tier-2 ablations; remove '#' to run them later.
+  - {name: l3_full,      exp: configs/exp/main.yaml, set: []}
+  # - {name: l3_meansoft,  exp: configs/exp/main.yaml, set: [model.label_mode=mean_soft]}
+  - {name: l3_dual,      exp: configs/exp/main.yaml, set: [model.label_mode=dual_loss]}
+  - {name: l3_stain_none, exp: configs/exp/main.yaml, set: [stain.augment=none, stain.branch_input=rgb]}

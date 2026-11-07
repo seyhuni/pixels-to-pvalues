@@ -1,0 +1,31 @@
+# conda env create -f environment.yml      (Windows / Linux, NVIDIA GPU, CUDA 12.8 wheels)
+# cu128 wheels support RTX 50xx (Blackwell) as well as 30xx/40xx/A-series GPUs.
+# Baselines (MONAI, nnU-Net) are NOT included: pip install -r requirements-baselines.txt
+# afterwards, then verify:  python -c "import torch;print(torch.__version__, torch.version.cuda)"
+name: mlst
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - pip
+  - pip:
+      - --extra-index-url https://download.pytorch.org/whl/cu128
+      - torch==2.7.1
+      - torchvision==0.22.1
+      - timm>=1.0.30
+      - huggingface_hub>=0.30
+      - safetensors
+      - transformers>=4.46
+      - numpy>=1.26,<2.3
+      - scipy>=1.11
+      - pandas>=2.1
+      - scikit-learn>=1.4
+      - scikit-image>=0.22
+      - opencv-python-headless>=4.9
+      - pillow>=10
+      - pyyaml>=6
+      - tqdm
+      - statsmodels>=0.14
+      - matplotlib>=3.8
+      - seaborn>=0.13
+      - tabulate
